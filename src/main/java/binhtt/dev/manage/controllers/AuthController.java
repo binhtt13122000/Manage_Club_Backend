@@ -1,6 +1,6 @@
 package binhtt.dev.manage.controllers;
 
-import binhtt.dev.manage.services.AccoutService;
+import binhtt.dev.manage.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("v1/api")
 public class AuthController {
     @Autowired
-    private AccoutService account;
+    private AccountService account;
     @PostMapping(path = "/login")
     public ResponseEntity login(HttpServletRequest request){
         return new ResponseEntity("Login Successfully!", HttpStatus.OK);

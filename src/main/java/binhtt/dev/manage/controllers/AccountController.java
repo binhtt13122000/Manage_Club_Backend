@@ -1,7 +1,7 @@
 package binhtt.dev.manage.controllers;
 
-import binhtt.dev.manage.entities.UserEntity;
-import binhtt.dev.manage.services.UserService;
+import binhtt.dev.manage.entities.Account;
+import binhtt.dev.manage.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,13 +9,19 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("v1/api")
-public class UserController {
+public class AccountController {
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
     //create
     @PostMapping("/users")
-    public ResponseEntity addMemberToGroup(@RequestBody UserEntity account){
-        return null;
+    public ResponseEntity addMemberToGroup(@RequestBody Account account){
+        if(accountService.findAccountById(account.getStudentID()) != null){
+            return new ResponseEntity("StudentID is taken", HttpStatus.BAD_REQUEST);
+        }
+        if(accountService.findAccountByEmail(account.getEmail()) != null){
+            return new ResponseEntity("Email is taken", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("Create Successfully", HttpStatus.CREATED);
     }
 
     //ban user
@@ -26,7 +32,7 @@ public class UserController {
 
     //update profile
     @PutMapping("/users/{studentId}")
-    public ResponseEntity updateProfile(@PathVariable("studentId") String studentId, @RequestBody UserEntity userEntity){
+    public ResponseEntity updateProfile(@PathVariable("studentId") String studentId, @RequestBody Account userEntity){
         return null;
     }
 
