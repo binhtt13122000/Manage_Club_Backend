@@ -1,5 +1,6 @@
 package binhtt.dev.manage.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ public class Account implements Serializable {
     @Id
     @Column(name = "studentID", nullable = false, unique = true, updatable = false)
     private @Max(8) String studentID;
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "fullname", nullable = false)

@@ -109,7 +109,12 @@ public class AccountController {
     //get users by id
     @GetMapping("/users/{studentId}")
     public ResponseEntity getUserById(@PathVariable("studentId") String studentId) {
-        return null;
+        Account account = accountService.findAccountById(studentId);
+        if(account == null){
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity(account, HttpStatus.OK);
+        }
     }
 
 
