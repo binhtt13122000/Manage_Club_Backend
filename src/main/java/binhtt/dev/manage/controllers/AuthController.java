@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("v1/api")
+@RequestMapping("/v1/api")
 public class AuthController {
     @Autowired
     private AccountService account;

@@ -1,7 +1,14 @@
 package binhtt.dev.manage.controllers;
 
 import binhtt.dev.manage.entities.Account;
+import binhtt.dev.manage.repositories.AccountRepository;
 import binhtt.dev.manage.services.AccountService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,13 +21,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("v1/api")
+@RequestMapping("/v1/api")
 public class AccountController {
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private AccountRepository accountRepository;
 
     //create
     @PostMapping("/users")
@@ -116,6 +126,5 @@ public class AccountController {
             return new ResponseEntity(account, HttpStatus.OK);
         }
     }
-
 
 }

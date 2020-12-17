@@ -63,7 +63,7 @@ public class AccountServiceImp implements AccountService {
 
     @Override
     public Page<Account> findAllAccount(Pageable pageable) {
-        return accountRepository.findAllAccount(pageable);
+        return accountRepository.findAll(pageable);
     }
 
     @Override
