@@ -5,6 +5,8 @@ import binhtt.dev.manage.entities.Role;
 import binhtt.dev.manage.repositories.AccountRepository;
 import binhtt.dev.manage.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,5 +59,15 @@ public class AccountServiceImp implements AccountService {
                 }
             }
         }
+    }
+
+    @Override
+    public Page<Account> findAllAccount(Pageable pageable) {
+        return accountRepository.findAllAccount(pageable);
+    }
+
+    @Override
+    public Page<Account> findByName(String name, Pageable pageable) {
+        return accountRepository.findAccountsByFullnameContaining(name, pageable);
     }
 }
