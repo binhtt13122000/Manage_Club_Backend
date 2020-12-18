@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -29,8 +28,6 @@ import java.util.Optional;
 public class AccountController {
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private AccountRepository accountRepository;
 
     //create
     @PostMapping("/users")

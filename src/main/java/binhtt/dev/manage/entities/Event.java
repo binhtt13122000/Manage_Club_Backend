@@ -17,9 +17,9 @@ import java.sql.Timestamp;
 public class Event implements Serializable {
     @Id
     @Column(name = "eventId", nullable = false, unique = true, updatable = false)
-    private @Max(50) String eventId;
+    private String eventId;
     @Column(name = "eventName", nullable = false)
-    private @Min(20) @Max(100) String eventName;
+    private String eventName;
     @Column(name = "eventDesc")
     private String eventDesc;
     @Column(name = "createdTime", nullable = false)

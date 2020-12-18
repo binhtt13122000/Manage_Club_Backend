@@ -18,18 +18,18 @@ import java.io.Serializable;
 public class Account implements Serializable {
     @Id
     @Column(name = "studentID", nullable = false, unique = true, updatable = false)
-    private @Max(8) String studentID;
+    private String studentID;
     @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "fullname", nullable = false)
-    private @NotNull @NotBlank @Min(10) @Max(50) String fullname;
+    private @NotNull @NotBlank String fullname;
     @Column(name = "avatarId")
     private String avatarId;
     @Column(name = "phone")
     private @Max(10) String phone;
     @Column(name = "email", unique = true)
-    private @NotNull @NotBlank @Min(10) @Max(50) @Email String email;
+    private @NotNull @NotBlank @Email String email;
     @Column(name = "status")
     private boolean status;
     @ManyToOne

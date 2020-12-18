@@ -19,9 +19,9 @@ import java.sql.Timestamp;
 public class Group implements Serializable {
     @Id
     @Column(name = "groupId", nullable = false, updatable = false, unique = true)
-    private @Max(50) String groupId;
+    private String groupId;
     @Column(name = "groupName", nullable = false)
-    private @Min(10) @Max(100) String groupName;
+    private String groupName;
     private String groupDesc;
     @Column(name = "createdTime")
     private Timestamp createdTime;
