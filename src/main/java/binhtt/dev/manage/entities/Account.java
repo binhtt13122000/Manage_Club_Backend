@@ -3,12 +3,7 @@ package binhtt.dev.manage.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 
@@ -34,5 +29,15 @@ public class Account implements Serializable {
     private boolean status;
     @ManyToOne
     @JoinColumn(name = "roleId", nullable = false)
+    @JsonIgnore
     private Role role;
+
+    @Transient
+    private int roleId;
+
+    public int getRoleId() {
+        return (roleId > 0) ? roleId : role.getRoleId();
+    }
+
+
 }
