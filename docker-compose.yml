@@ -3,8 +3,13 @@ services:
   sql-server-db:
     container_name: sql-server-db
     image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "password"
-      ACCEPT_FULA: "Y"
+      SA_PASSWORD: thanhbinh
+      ACCEPT_FULA: Y
+    volumes:
+      - C:\MSSQL\BACKUP\KEEP:/var/opt/mssql/backups
+      - C:\MSSQL\DockerFiles\datafiles:/var/opt/sqlserver
+      - C:\MSSQL\DockerFiles\system:/var/opt/mssql

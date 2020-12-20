@@ -99,7 +99,7 @@ public class AccountController {
             @RequestParam Optional<Integer> limit,
             @RequestParam Optional<String> sort,
             @RequestParam Optional<String> q) {
-        Pageable pageable = PageRequest.of(offset.orElse(0), limit.orElse(10), Sort.Direction.ASC, sort.orElse("studentId"));
+        Pageable pageable = PageRequest.of(offset.orElse(0), limit.orElse(10), Sort.Direction.ASC, sort.orElse("studentID"));
         Page<Account> accounts;
         if(q.isPresent()){
             accounts = accountService.findByName(q.get(), pageable);
