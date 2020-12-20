@@ -98,9 +98,10 @@ public class AccountController {
             @RequestParam Optional<Integer> offset,
             @RequestParam Optional<Integer> limit,
             @RequestParam Optional<String> sort,
-            @RequestParam Optional<String> q) {
+            @RequestParam Optional<String> q, Authentication authentication) {
         Pageable pageable = PageRequest.of(offset.orElse(0), limit.orElse(10), Sort.Direction.ASC, sort.orElse("studentID"));
         Page<Account> accounts;
+        authentication.getAuthorities().forEach(e -> System.out.println(e));
         if(q.isPresent()){
             accounts = accountService.findByName(q.get(), pageable);
         } else {
