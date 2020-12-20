@@ -1,14 +1,13 @@
 package binhtt.dev.manage.controllers;
 
 import binhtt.dev.manage.entities.Account;
-import binhtt.dev.manage.repositories.AccountRepository;
 import binhtt.dev.manage.services.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,33 +16,91 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/api")
+@Tag(name = "Account")
 public class AccountController {
     @Autowired
     private AccountService accountService;
 
+    String getRole(Authentication authentication){
+        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        return roles.get(0);    }
     //create
+    @Operation(description = "Add new user (ADMIN)", responses = {
+            @ApiResponse(
+                    description = "Add new User Successfully!",
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "Add new User Successfully!",
+                                    value = "Add new User Successfully!"
+                            ),
+                            schema = @Schema(implementation = Account.class)
+                    )
+            ),
+            @ApiResponse(
+                    description = "Access denied!",
+                    responseCode = "403",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "Access denied!",
+                                    value = "Access denied!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    description = "StudentID or Email is taken!",
+                    responseCode = "400",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "StudentID or Email is taken!",
+                                    value = "StudentID or Email is taken!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    description = "Constraints are invalid!!",
+                    responseCode = "500",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "Constraints are invalid!!",
+                                    value = "Constraints are invalid!!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+    })
     @PostMapping("/users")
-    @RolesAllowed("ROLE_ADMIN")
-    public ResponseEntity addMemberToGroup(@RequestBody Account account) {
-        if (accountService.findAccountById(account.getStudentID()) != null) {
-            return new ResponseEntity("StudentID is taken", HttpStatus.BAD_REQUEST);
+    public ResponseEntity addMemberToGroup(@RequestBody Account account, Authentication authentication) {
+        try {
+            String role = getRole(authentication);
+            if(!role.equals("ROLE_ADMIN")){
+                return new ResponseEntity("Access denied!", HttpStatus.FORBIDDEN);
+            }
+            if(accountService.findAccountById(account.getStudentID()) != null || accountService.findAccountByEmail(account.getEmail()) != null){
+                return new ResponseEntity("StudentID or Email is taken!", HttpStatus.BAD_REQUEST);
+            }
+            accountService.addMember(account);
+            return new ResponseEntity("Add new User Successfully!", HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity("Constraints are invalid!!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        if (accountService.findAccountByEmail(account.getEmail()) != null) {
-            return new ResponseEntity("Email is taken", HttpStatus.BAD_REQUEST);
-        }
-        boolean check = accountService.addMember(account);
-        if (check) {
-            return new ResponseEntity("Create Successfully", HttpStatus.CREATED);
-        }
-        return new ResponseEntity("Add user failed!", HttpStatus.BAD_REQUEST);
     }
 
     //ban user

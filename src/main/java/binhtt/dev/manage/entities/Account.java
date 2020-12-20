@@ -63,6 +63,8 @@ public class Account implements Serializable {
     @Transient
     @NotNull
     @Schema(example = "2")
+    @Min(value = 0)
+    @Max(value = 2)
     private int roleId;
 
     public int getRoleId() {
