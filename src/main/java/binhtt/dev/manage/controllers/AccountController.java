@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -29,8 +28,6 @@ import java.util.Optional;
 public class AccountController {
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private AccountRepository accountRepository;
 
     //create
     @PostMapping("/users")
@@ -102,7 +99,7 @@ public class AccountController {
             @RequestParam Optional<Integer> limit,
             @RequestParam Optional<String> sort,
             @RequestParam Optional<String> q) {
-        Pageable pageable = PageRequest.of(offset.orElse(0), limit.orElse(10), Sort.Direction.ASC, sort.orElse("studentId"));
+        Pageable pageable = PageRequest.of(offset.orElse(0), limit.orElse(10), Sort.Direction.ASC, sort.orElse("studentID"));
         Page<Account> accounts;
         if(q.isPresent()){
             accounts = accountService.findByName(q.get(), pageable);
