@@ -1,6 +1,7 @@
 package binhtt.dev.manage.controllers;
 
 import binhtt.dev.manage.entities.Account;
+import binhtt.dev.manage.entities.Role;
 import binhtt.dev.manage.services.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,7 +47,7 @@ public class AccountController {
                     description = "Add new User Successfully!",
                     responseCode = "200",
                     content = @Content(
-                            mediaType = "text/plain; charset=utf-8",
+                            mediaType = "application/json",
                             examples = @ExampleObject(
                                     description = "Add new User Successfully!",
                                     value = "Add new User Successfully!"
@@ -334,13 +335,50 @@ public class AccountController {
     }
 
     //get users
+    @Operation(description = "Get All Student", responses = {
+            @ApiResponse(
+                    description = "Get All Successfully!",
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class)
+                    )
+            ),
+            @ApiResponse(
+                    description = "No data!",
+                    responseCode = "404",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "No data!",
+                                    value = "No data!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    description = "Access denied!",
+                    responseCode = "403",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "Access denied!",
+                                    value = "Access denied!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+    })
     @GetMapping("/users")
-    @RolesAllowed("ROLE_ADMIN")
     public ResponseEntity getUsers(
             @RequestParam Optional<Integer> offset,
             @RequestParam Optional<Integer> limit,
             @RequestParam Optional<String> sort,
+            @RequestParam Optional<Integer> roleId,
             @RequestParam Optional<String> q, Authentication authentication) {
+        if(!getRole(authentication).equals("ROLE_ADMIN")){
+            return new ResponseEntity("Access denied!", HttpStatus.FORBIDDEN);
+        }
         Pageable pageable = PageRequest.of(offset.orElse(0), limit.orElse(10), Sort.Direction.ASC, sort.orElse("studentID"));
         Page<Account> accounts;
         if(q.isPresent()){
@@ -349,20 +387,125 @@ public class AccountController {
             accounts = accountService.findAllAccount(pageable);
         }
         if(accounts.isEmpty()){
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity("No data",HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity(accounts, HttpStatus.OK);
         }
     }
 
     //get users by id
+    @Operation(description = "Get One Student", responses = {
+            @ApiResponse(
+                    description = "Get One Successfully!",
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)
+                    )
+            ),
+            @ApiResponse(
+                    description = "Access denied!",
+                    responseCode = "403",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "Access denied!",
+                                    value = "Access denied!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    description = "StudentID is not found!",
+                    responseCode = "404",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "StudentID is not found!",
+                                    value = "StudentID is not found!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+    })
     @GetMapping("/users/{studentId}")
-    public ResponseEntity getUserById(@PathVariable("studentId") String studentId) {
+    public ResponseEntity getUserById(@PathVariable("studentId") String studentId, Authentication authentication) {
+        if(!authentication.getName().equals(studentId) && !getRole(authentication).equals("ROLE_ADMIN")){
+            return new ResponseEntity("Access denied", HttpStatus.FORBIDDEN);
+        }
         Account account = accountService.findAccountById(studentId);
         if(account == null){
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity("StudentID is not found!", HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity(account, HttpStatus.OK);
+        }
+    }
+
+    //change role
+    @Operation(description = "Change role (ADMIN)", responses = {
+            @ApiResponse(
+                    description = "Change role Successfully!",
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "Change role Successfully!",
+                                    value = "Change role Successfully!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    description = "Access denied!",
+                    responseCode = "403",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "Access denied!",
+                                    value = "Access denied!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    description = "StudentID is not found!",
+                    responseCode = "404",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "StudentID is not found!",
+                                    value = "StudentID is not found!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    description = "Cannot change!",
+                    responseCode = "400",
+                    content = @Content(
+                            mediaType = "text/plain; charset=utf-8",
+                            examples = @ExampleObject(
+                                    description = "Cannot change!",
+                                    value = "Cannot change!"
+                            ),
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+    })
+    @PutMapping("/users/{studentId}/upgrade_role")
+    public ResponseEntity changeRole(@PathVariable("studentId") String studentId, Authentication authentication){
+        if(!getRole(authentication).equals("ROLE_ADMIN")){
+            return new ResponseEntity("Access denied", HttpStatus.FORBIDDEN);
+        }
+        Account account = accountService.findAccountById(studentId);
+        if (account == null) {
+            return new ResponseEntity("StudentID is not found!", HttpStatus.NOT_FOUND);
+        } else {
+            if(account.getRoleId() != 1){
+                return new ResponseEntity("Cannot change", HttpStatus.BAD_REQUEST);
+            }
+            account.setRole(new Role(2, null));
+            return new ResponseEntity("Change role Successfully!", HttpStatus.OK);
         }
     }
 

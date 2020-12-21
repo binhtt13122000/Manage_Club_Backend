@@ -59,5 +59,10 @@ public class Account implements Serializable {
     @JsonIgnore
     private Role role;
 
+    @Transient
+    private int roleId;
 
+    public int getRoleId() {
+        return (role != null) ? role.getRoleId() : 0;
+    }
 }
