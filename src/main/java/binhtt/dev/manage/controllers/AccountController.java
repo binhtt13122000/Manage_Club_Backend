@@ -384,7 +384,7 @@ public class AccountController {
         if(q.isPresent()){
             accounts = accountService.findByName(q.get(), pageable);
         } else {
-            accounts = accountService.findAllAccount(pageable);
+            accounts = accountService.findAllAccount(pageable);;
         }
         if(accounts.isEmpty()){
             return new ResponseEntity("No data",HttpStatus.NOT_FOUND);
@@ -437,6 +437,7 @@ public class AccountController {
         if(account == null){
             return new ResponseEntity("StudentID is not found!", HttpStatus.NOT_FOUND);
         } else {
+            System.out.println();
             return new ResponseEntity(account, HttpStatus.OK);
         }
     }
