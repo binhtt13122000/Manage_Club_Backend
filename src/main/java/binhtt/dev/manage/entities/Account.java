@@ -59,17 +59,5 @@ public class Account implements Serializable {
     @JsonIgnore
     private Role role;
 
-    //role
-    @Transient
-    @NotNull
-    @Schema(example = "2")
-    @Min(value = 1)
-    @Max(value = 2)
-    private int roleId = 1;
-
-    public int getRoleId() {
-        return (roleId > 1) ? roleId : role.getRoleId();
-    }
-
 
 }

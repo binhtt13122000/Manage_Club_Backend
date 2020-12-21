@@ -27,7 +27,7 @@ public class AccountServiceImp implements AccountService {
         if(findAccountById(account.getStudentID()) == null && findAccountByEmail(account.getEmail()) == null){
             account.setStatus(true);
             account.setPassword(passwordEncoder.encode(account.getStudentID()));
-            account.setRole(new Role(account.getRoleId(), null));
+            account.setRole(new Role(1, null));
             accountRepository.save(account);
             return true;
         } else {
