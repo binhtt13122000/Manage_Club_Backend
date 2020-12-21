@@ -63,12 +63,12 @@ public class Account implements Serializable {
     @Transient
     @NotNull
     @Schema(example = "2")
-    @Min(value = 0)
+    @Min(value = 1)
     @Max(value = 2)
-    private int roleId;
+    private int roleId = 1;
 
     public int getRoleId() {
-        return (roleId > 0) ? roleId : role.getRoleId();
+        return (roleId > 1) ? roleId : role.getRoleId();
     }
 
 
