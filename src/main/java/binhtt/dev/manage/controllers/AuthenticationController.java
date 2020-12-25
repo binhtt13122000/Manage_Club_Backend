@@ -3,8 +3,6 @@ package binhtt.dev.manage.controllers;
 import binhtt.dev.manage.auth.JwtUtils;
 import binhtt.dev.manage.auth.MyUserDetailService;
 import binhtt.dev.manage.auth.SecurityConstant;
-import binhtt.dev.manage.auth.UserPrincipal;
-import binhtt.dev.manage.services.AccountService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,11 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 
 @Data
 class AuthenticationRequest {
@@ -27,7 +23,7 @@ class AuthenticationRequest {
 
 @RestController
 @RequestMapping("/v1/api")
-public class AuthController {
+public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -36,7 +32,7 @@ public class AuthController {
     private MyUserDetailService userDetailService;
 
     @PostMapping(path = "/login")
-    public ResponseEntity login(@RequestBody AuthenticationRequest request) throws Exception {
+    public ResponseEntity login(@RequestBody AuthenticationRequest request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             UserDetails user = userDetailService.loadUserByUsername(request.getUsername());

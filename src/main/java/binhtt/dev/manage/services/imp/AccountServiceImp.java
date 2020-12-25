@@ -17,32 +17,22 @@ public class AccountServiceImp implements AccountService {
     private AccountRepository accountRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Override
     public Account findAccountById(String id) {
         return accountRepository.findById(id).orElse(null);
     }
 
     @Override
-    public boolean addMember(Account account) {
-        if(findAccountById(account.getStudentID()) == null && findAccountByEmail(account.getEmail()) == null){
-            account.setStatus(true);
-            account.setPassword(passwordEncoder.encode(account.getStudentID()));
-            account.setRole(new Role(1, null));
-            accountRepository.save(account);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public Account findAccountByEmail(String email) {
-        return accountRepository.findAccountByEmail(email).orElse(null);
+    public void addMember(Account account) {
+        account.setStatus(true);
+        account.setPassword(passwordEncoder.encode(account.getStudentID()));
+        account.setRole(new Role(1, null));
+        accountRepository.save(account);
     }
 
     @Override
     public void updateProfile(Account currentAccount, Account account) {
-        currentAccount.setAvatarId(account.getAvatarId());
         currentAccount.setFullname(account.getFullname());
         currentAccount.setPhone(account.getPhone());
         accountRepository.save(currentAccount);
@@ -62,12 +52,24 @@ public class AccountServiceImp implements AccountService {
     }
 
     @Override
-    public Page<Account> findAllAccount(Pageable pageable) {
-        return accountRepository.findAll(pageable);
+    public Page<Account> findAllAccount(int roleId, Pageable pageable) {
+        return accountRepository.findAccountsByRoleId(roleId, pageable);
     }
 
     @Override
-    public Page<Account> findByName(String name, Pageable pageable) {
-        return accountRepository.findAccountsByFullnameContaining(name, pageable);
+    public Page<Account> findByName(int roleId, String name, Pageable pageable) {
+        return accountRepository.findAccountsByFullnameContainingAndRoleId(name, roleId, pageable);
+    }
+
+    @Override
+    public void banAccount(Account currentAccount) {
+        currentAccount.setStatus(false);
+        accountRepository.save(currentAccount);
+    }
+
+    @Override
+    public void activeAccount(Account currentAccount) {
+        currentAccount.setStatus(true);
+        accountRepository.save(currentAccount);
     }
 }

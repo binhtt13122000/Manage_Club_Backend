@@ -6,10 +6,13 @@ import org.springframework.data.domain.Pageable;
 
 public interface AccountService {
     Account findAccountById(String id);
-    boolean addMember(Account account);
-    Account findAccountByEmail(String email);
+    void addMember(Account account);
     void updateProfile(Account currentAccount, Account account);
     void changePassword(Account currentAccount, String newPassword, String oldPassword);
-    Page<Account> findAllAccount(Pageable pageable);
-    Page<Account> findByName(String name, Pageable pageable);
+    Page<Account> findAllAccount(int roleId, Pageable pageable);
+    Page<Account> findByName(int roleId, String name, Pageable pageable);
+
+    void banAccount(Account currentAccount);
+
+    void activeAccount(Account currentAccount);
 }
