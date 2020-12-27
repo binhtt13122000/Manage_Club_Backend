@@ -26,7 +26,7 @@ public class Account implements Serializable {
     private String studentID;
 
     @Column(name = "password", nullable = false)
-    @NotNull(message = "Password is not null")
+    @JsonIgnore
     private String password;
 
     @Column(name = "fullname", nullable = false)

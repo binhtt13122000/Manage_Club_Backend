@@ -47,10 +47,6 @@ public class ApiError extends ResponseEntityExceptionHandler {
         this.errors = Arrays.asList(error);
     }
 
-    public ResponseEntity getCustomErrorResponse() {
-        ApiError apiError = new ApiError(status, message, errors);
-        return new ResponseEntity(apiError, status);
-    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {

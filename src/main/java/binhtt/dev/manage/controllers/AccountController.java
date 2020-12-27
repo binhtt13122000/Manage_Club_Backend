@@ -85,6 +85,7 @@ public class AccountController {
     })
     @PostMapping("/users")
     public ResponseEntity addMemberToGroup(@Valid @RequestBody Account account, Authentication authentication) {
+        System.out.println(RoleUtils.isAdmin(authentication));
         if(RoleUtils.isAdmin(authentication)){
             accountService.addMember(account);
             return new ResponseEntity("Add new User Successfully!", HttpStatus.OK);
@@ -329,7 +330,8 @@ public class AccountController {
             errors.add("Password and new password is equals!");
         }
         if(errors.size() > 0){
-            return new ApiError(HttpStatus.BAD_REQUEST, "Bad request", errors).getCustomErrorResponse();
+            ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Bad request", errors);
+            return new ResponseEntity(apiError, apiError.getStatus());
         }
         if(RoleUtils.isMySelf(authentication, studentId)){
             Account currentAccount = accountService.findAccountById(studentId);
@@ -351,18 +353,6 @@ public class AccountController {
                     )
             ),
             @ApiResponse(
-                    description = "No data!",
-                    responseCode = "404",
-                    content = @Content(
-                            mediaType = "text/plain; charset=utf-8",
-                            examples = @ExampleObject(
-                                    description = "No data!",
-                                    value = "No data!"
-                            ),
-                            schema = @Schema(implementation = String.class)
-                    )
-            ),
-            @ApiResponse(
                     description = "Access denied!",
                     responseCode = "403",
                     content = @Content(
@@ -377,30 +367,20 @@ public class AccountController {
     })
     @GetMapping("/users")
     public ResponseEntity getUsers(
-            @RequestParam Optional<Integer> offset,
-            @RequestParam Optional<Integer> limit,
-            @RequestParam Optional<String> sort,
-            @RequestParam Optional<String> q, Authentication authentication) {
-        Pageable pageable = PageRequest.of(offset.orElse(0), limit.orElse(5), Sort.Direction.ASC, sort.orElse("studentID"));
-        Page<Account> accounts = null;
-        if(RoleUtils.isAdmin(authentication)){
-            if(q.isPresent()){
-                accounts = accountService.findByName(1, q.get(), pageable);
-            } else {
-                accounts = accountService.findAllAccount(1, pageable);
-            }
-        }
+            @RequestParam Optional<String> studentID,
+            @RequestParam Optional<String> fullname,
+            @RequestParam Optional<String> email, Authentication authentication) {
+        List<Account> accounts = null;
         if(RoleUtils.isLeader(authentication)){
-            if(q.isPresent()){
-                accounts = accountService.findByName(1, q.get(), pageable);
-            } else {
-                accounts = accountService.findAllAccount(1, pageable);
-            }
+            accounts =  accountService.findAccountByProperties(studentID.orElse(""), fullname.orElse(""), email.orElse(""), false, true);
+        }
+        if(RoleUtils.isAdmin(authentication)){
+            accounts =  accountService.findAccountByProperties(studentID.orElse(""), fullname.orElse(""), email.orElse(""), true, true);
         }
         if(accounts == null){
-
+            return new ResponseEntity("Access denied!", HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity("Access denied!", HttpStatus.FORBIDDEN);
+        return new ResponseEntity(accounts, HttpStatus.OK);
     }
 
     @Operation(description = "Get One Student", responses = {

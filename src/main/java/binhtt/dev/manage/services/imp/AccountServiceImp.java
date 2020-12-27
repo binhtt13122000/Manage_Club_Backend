@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AccountServiceImp implements AccountService {
     @Autowired
@@ -52,14 +54,10 @@ public class AccountServiceImp implements AccountService {
     }
 
     @Override
-    public Page<Account> findAllAccount(int roleId, Pageable pageable) {
-        return accountRepository.findAccountsByRoleId(roleId, pageable);
+    public List<Account> findAccountByProperties(String studentID, String fullname, String email, boolean isLeader, boolean isMember) {
+        return accountRepository.getAccountByProperties(studentID, fullname, email, isLeader, isMember);
     }
 
-    @Override
-    public Page<Account> findByName(int roleId, String name, Pageable pageable) {
-        return accountRepository.findAccountsByFullnameContainingAndRoleId(name, roleId, pageable);
-    }
 
     @Override
     public void banAccount(Account currentAccount) {

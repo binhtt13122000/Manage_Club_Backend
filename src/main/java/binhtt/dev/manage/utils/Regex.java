@@ -5,7 +5,7 @@ public class Regex {
             "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
             "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$";
 
-    public static final String REGEX_STUDENT_ID = "[SE0-9]{8}";
+    public static final String REGEX_STUDENT_ID = "(SE)[0-9]{6}";
 
     public static final String REGEX_USERNAME = "^[a-zA-Z0-9._]+$";
     public static final String REGEX_PHONE = "^\\d{10}$";
