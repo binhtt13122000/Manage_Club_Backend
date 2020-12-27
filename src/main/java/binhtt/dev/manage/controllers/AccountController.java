@@ -6,6 +6,7 @@ import binhtt.dev.manage.services.AccountService;
 import binhtt.dev.manage.utils.ApiError;
 import binhtt.dev.manage.utils.RoleUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -349,7 +350,7 @@ public class AccountController {
                     responseCode = "200",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = Page.class)
+                            array = @ArraySchema(schema = @Schema(implementation = Account.class))
                     )
             ),
             @ApiResponse(
