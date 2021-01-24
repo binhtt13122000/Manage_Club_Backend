@@ -99,6 +99,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/v1/api/login").permitAll()
+                .antMatchers(HttpMethod.GET, "vv1/api/events/public").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutUrl("/logout").permitAll()

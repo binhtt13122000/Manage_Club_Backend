@@ -12,6 +12,7 @@
     <artifactId>manage</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>manage</name>
+    <packaging>jar</packaging>
     <description>Project for Manage Club</description>
 
     <properties>
@@ -67,16 +68,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springdoc</groupId>-->
-<!--            <artifactId>springdoc-openapi-core</artifactId>-->
-<!--            <version>1.1.47</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springdoc</groupId>-->
-<!--            <artifactId>springdoc-openapi-ui</artifactId>-->
-<!--            <version>1.1.47</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
