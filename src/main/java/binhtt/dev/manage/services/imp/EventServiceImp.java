@@ -14,6 +14,7 @@ public class EventServiceImp implements EventService {
     private EventRepository eventRepository;
     @Override
     public List<Event> getEvents(String name, boolean isInternal) {
-        return eventRepository.getEventsByEventNameContainingAndInternal(name, isInternal);
+//        return eventRepository.getEventsByEventNameContainingAndInternal(name, isInternal);
+        return null;
     }
 }

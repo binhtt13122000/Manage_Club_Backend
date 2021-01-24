@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, String> {
-    List<Event> getEventsByEventNameContainingAndInternal(String eventName, boolean isInternal);
+//    List<Event> getEventsByEventNameContainingAndInternal(String eventName, boolean isInternal);
 
 }

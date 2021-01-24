@@ -12,6 +12,7 @@
     <artifactId>manage</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>manage</name>
+    <packaging>jar</packaging>
     <description>Project for Manage Club</description>
 
     <properties>
@@ -76,16 +77,6 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-security</artifactId>
             <version>1.5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>6.0.13.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>3.0.0</version>
         </dependency>
     </dependencies>
 

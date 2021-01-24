@@ -64,7 +64,7 @@ public class Account implements Serializable {
     private Role role;
 
     @Transient
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY) //de-serilizable
     private int roleId;
 
     public int getRoleId() {
